@@ -146,6 +146,7 @@ public class listagemVIEW extends javax.swing.JFrame {
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(null, "ID inválido. Por favor, insira um número válido.", "ERRO", JOptionPane.ERROR_MESSAGE);
         }
+    
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
