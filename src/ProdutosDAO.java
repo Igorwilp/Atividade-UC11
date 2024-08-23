@@ -87,4 +87,78 @@ public class ProdutosDAO {
         return listagem;
     }
 
+    public void venderProduto(int id) {
+        conn = conectaDAO.getConnection();
+        String sql = "UPDATE produtos SET status = ? WHERE id = ?";
+
+        try {
+            prep = conn.prepareStatement(sql);
+            prep.setString(1, "Vendido");
+            prep.setInt(2, id);
+
+            int rowsAffected = prep.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(null, "Produto vendido com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Produto não encontrado.");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao vender produto: " + ex.getMessage(), "ERRO", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (prep != null) {
+                    prep.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Erro ao fechar conexão: " + e.getMessage());
+            }
+        }
+    }
+
+    public ArrayList<ProdutosDTO> listarProdutosVendidos() {
+        conn = conectaDAO.getConnection();
+        String sql = "SELECT * FROM produtos WHERE status = ?";
+
+        try {
+            prep = conn.prepareStatement(sql);
+            prep.setString(1, "Vendido"); 
+            resultset = prep.executeQuery();
+
+            listagem.clear();  
+
+            while (resultset.next()) {
+                ProdutosDTO produto = new ProdutosDTO();
+                produto.setId(resultset.getInt("id"));
+                produto.setNome(resultset.getString("nome"));
+                produto.setValor(resultset.getInt("valor"));
+                produto.setStatus(resultset.getString("status"));
+
+                listagem.add(produto);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar produtos vendidos: " + ex.getMessage(), "ERRO", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (resultset != null) {
+                    resultset.close();
+                }
+                if (prep != null) {
+                    prep.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Erro ao fechar conexão: " + e.getMessage());
+                e.printStackTrace(); 
+            }
+        }
+
+        return listagem;  
+    }
 }
